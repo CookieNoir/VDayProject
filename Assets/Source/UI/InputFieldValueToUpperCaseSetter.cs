@@ -7,14 +7,6 @@ namespace CookieNoir.VDay
     {
         [SerializeField] private TMP_InputField _inputField;
 
-        private void OnEnable()
-        {
-            if (_inputField != null)
-            {
-                _inputField.onValueChanged.AddListener(ToUpper);
-            }
-        }
-
         private void ToUpper(string value)
         {
             if (_inputField == null)
@@ -23,6 +15,14 @@ namespace CookieNoir.VDay
             }
             value = value.ToUpper();
             _inputField.SetTextWithoutNotify(value);
+        }
+
+        private void OnEnable()
+        {
+            if (_inputField != null)
+            {
+                _inputField.onValueChanged.AddListener(ToUpper);
+            }
         }
 
         private void OnDisable()
