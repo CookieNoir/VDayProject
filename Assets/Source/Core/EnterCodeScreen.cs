@@ -1,12 +1,14 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace CookieNoir.VDay
 {
     public class EnterCodeScreen : MonoBehaviour
     {
         [SerializeField] private TMP_InputField _inputField;
+        [SerializeField] private InputField _legacyInputField;
         [SerializeField] private TMP_Text _text;
         [field: SerializeField] public UnityEvent OnShow { get; private set; }
         [field: SerializeField] public UnityEvent OnHide { get; private set; }
@@ -17,7 +19,8 @@ namespace CookieNoir.VDay
         public void Show(string text, string targetCode, UnityEvent onSuccess)
         {
             if (_isShown ||
-                _inputField == null)
+                (_inputField == null &&
+                _legacyInputField == null))
             {
                 return;
             }
@@ -27,7 +30,14 @@ namespace CookieNoir.VDay
             }
             _targetCode = targetCode;
             _onSuccess = onSuccess;
-            _inputField.SetTextWithoutNotify(string.Empty);
+            if (_inputField != null)
+            {
+                _inputField.SetTextWithoutNotify(string.Empty);
+            }
+            if (_legacyInputField != null)
+            {
+                _legacyInputField.SetTextWithoutNotify(string.Empty);
+            }
             _isShown = true;
             OnShow.Invoke();
         }
@@ -62,6 +72,10 @@ namespace CookieNoir.VDay
             {
                 _inputField.onEndEdit.AddListener(Validate);
             }
+            if (_legacyInputField != null)
+            {
+                _legacyInputField.onEndEdit.AddListener(Validate);
+            }
         }
 
         private void OnDisable()
@@ -69,6 +83,10 @@ namespace CookieNoir.VDay
             if (_inputField != null)
             {
                 _inputField.onEndEdit.RemoveListener(Validate);
+            }
+            if (_legacyInputField != null)
+            {
+                _legacyInputField.onEndEdit.AddListener(Validate);
             }
         }
     }
